@@ -5,7 +5,7 @@ Your AST should be defined in the provided Expression interface (in Expression.j
 
 Concrete syntax in the input, such as parentheses and whitespace, should not be represented at all in your AST.
 
-1.1 Expression
+## 1.1 Expression
 To repeat, your data type must be immutable and recursive . Follow the recipe for creating an ADT:
 
 Spec . Choose and specify operations. For this part of the problem set, the only operations Expression needs are creators and producers for building up an expression, plus the standard observers toString() , equals() , and hashCode() . We are strengthening the specs for these standard methods; see below.
@@ -13,7 +13,7 @@ Test . Partition and test your operations in ExpressionTest.java , including tes
 Code . Write the rep for your Expression as a data type definition in a comment inside Expression . Implement the variant classes of your data type.
 Remember to include a Javadoc comment above every class and every method you write; define abstraction functions and rep invariants, and write checkRep; and document safety from rep exposure.
 
-1.2 toString()
+## 1.2 toString()
 Define the toString() operation on Expression so it can output itself as a string. This string must be a valid expression as defined above. You have the freedom to decide how to format the output with whitespace and parentheses for readability, but the expression must have the same mathematical meaning.
 
 Your toString() implementation must be recursive, and must not use instanceof .
@@ -22,7 +22,7 @@ Use the @Override annotation to ensure you are overriding the toString() inherit
 
 Remember that your tests must obey the spec. If your toString() tests expect a certain formatting of whitespace and parentheses, you must specify this formatting in your spec.
 
-1.3 equals() and hashCode()
+## 1.3 equals() and hashCode()
 Define the equals() and hashCode() operations on your AST to implement structural equality .
 
 Structural equality defines two expressions to be equal if:
