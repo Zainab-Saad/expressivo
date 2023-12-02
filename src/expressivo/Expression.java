@@ -17,7 +17,10 @@ package expressivo;
 public interface Expression {
     
     // Datatype definition
-    //   TODO
+    /*
+     * Expression
+     */
+
     
     /**
      * Parse an expression.
@@ -25,8 +28,149 @@ public interface Expression {
      * @return expression AST for the input
      * @throws IllegalArgumentException if the expression is invalid
      */
-    public static Expression parse(String input) {
-        throw new RuntimeException("unimplemented");
+    public static Expression parse(String input) 
+    {
+        // remove spaces
+        // spaces may not occur between variables and numbers
+        // create ParseError
+        // operator between numbers and variables
+        Expression expression = null;
+
+        if (input != null)
+        {
+            char[] chars = input.toCharArray();
+
+            // if first character is an operator, throw an error
+            if (isOperator(chars[0]))
+                System.out.println("Error");;
+
+            OperandNode opNode1 = null;
+            OperandNode opNode2 = null;
+
+           for (int i=0; i<chars.length; i++)
+           {
+                // if the character is an operand
+                if (isOperand(chars[i]))
+                {   
+                    // if operand is variable
+                    if (((chars[i] >= 'a') && (chars[i] <= 'z') ||
+                    (chars[i] >= 'A') && (chars[i] <= 'Z')))
+                    {
+                        StringBuilder variable = new StringBuilder();
+
+                        // loop till variable name isn't complete
+                        do
+                        {
+                            variable.append(chars[i]);
+                            i++;
+                            if (i >= chars.length-1)
+                                break;
+                        }while(((chars[i] >= 'a') && (chars[i] <= 'z') ||
+                        (chars[i] >= 'A') && (chars[i] <= 'Z')));
+                        
+                        if (opNode1 == null)
+                            opNode1 = new OperandNode(variable.toString());
+                        else
+                            opNode2 = new OperandNode(variable.toString());
+                        i--;
+                    }
+
+                    // if operand is constant
+                    else if ((chars[i] >= '0') && (chars[i] <= '9'))
+                    {
+                        StringBuilder constant = new StringBuilder();
+
+                        // loop till constant isn't complete
+                        do
+                        {
+                            constant.append(chars[i]);
+                            i++;
+                            if (i >= chars.length-1)
+                                break;
+                        } while ((chars[i] >= '0') && (chars[i] <= '9'));
+
+                        if (opNode1 == null)
+                            opNode1 = new OperandNode(constant.toString());
+                        else
+                            opNode2 = new OperandNode(constant.toString());
+                        i--;
+                    }
+                }
+
+                // if the character is a space
+                if ((chars[i] == ' ') && (i < (chars.length-1)))
+                {
+                    if (i == 0)
+                        continue;
+
+                    // if space is subseded by an operand 
+                    if (isOperand(chars[i-1]))
+                    { 
+                        // if space is also followed by an operand
+                        if (isOperand(chars[i+1]))
+                        {
+                            System.out.println("PARSEERROR: space between operands at " + i);
+                            //return;
+                        }
+                    }
+
+                    // if space is subseded by an operator
+                    else if (isOperator(chars[i-1]))
+                    {
+                        // if space is also followed by an operator
+                        if (isOperator(chars[i+1]))
+                        {
+                            System.out.println("PARSEERROR: space between operators at " + i);
+                            //return;
+                        }
+                    }
+
+                    else if (isSpace(chars[i+1]))
+                        continue;
+                }
+
+                // if character is an operator
+                if (isOperator(chars[i]))
+                {
+                    OperatorNode opNode = new OperatorNode(chars[i], opNode1, opNode2);
+                }
+           } 
+
+        }
+        
+        return expression;
+    }
+
+    /* Utlilty Functions */
+
+    // checks whether the character is a valid operand
+    private static boolean isOperand(char ch)
+    {
+        boolean valid = false;
+        // if character is a valid operand
+        if (((ch >= '0') && (ch <='9')) || ((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <='Z')))
+            valid = true;
+        return valid;
+    }
+
+    // checks whether the character is a valid operator
+    private static boolean isOperator(char ch)
+    {
+        boolean valid = false;
+        // if character is a valid operator
+        if ((ch == '+') || (ch == '*'))
+            valid = true;
+        return valid;
+    }
+
+    // checks whether the character is a space
+    private static boolean isSpace(char ch)
+    {
+        boolean valid = false;
+        // if character is a space
+        if (ch == ' ')
+            valid = true;
+        return valid;
     }
     
     /**
@@ -54,4 +198,28 @@ public interface Expression {
     
     // TODO more instance methods
     
+}
+
+class OperandNode
+{
+    String value;
+
+    public OperandNode(String value)
+    {
+        this.value = value;
+    }
+}
+
+class OperatorNode
+{
+    char operator;
+    OperandNode left;
+    OperandNode right;
+
+    public OperatorNode(char operator, OperandNode left, OperandNode right)
+    {
+        this.operator = operator;
+        this.left = left;
+        this.right = right;
+    }
 }
